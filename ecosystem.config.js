@@ -4,7 +4,6 @@ const {
   DEPLOY_USER,
   DEPLOY_HOST,
   DEPLOY_REPO,
-  DEPLOY_PATH,
   DEPLOY_SSH_KEY,
 } = process.env;
 
@@ -27,22 +26,33 @@ module.exports = {
   ],
 
   deploy: {
-    production: {
+    backend: {
       user: DEPLOY_USER,
       host: DEPLOY_HOST,
       ref: 'origin/review',
       repo: DEPLOY_REPO,
-      path: DEPLOY_PATH,
+      path: '/home/user/backend', 
       ssh_options: `IdentityFile=${DEPLOY_SSH_KEY}`,
       'post-deploy': `
-        scp ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/current/backend/.env &&
-        cd backend &&
+        scp ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:/home/user/backend/.env &&
+        cd /home/user/backend &&
         npm install &&
         npm run build &&
-        cd ../frontend &&
+        pm2 reload ecosystem.config.js --only mesto-backend
+      `,
+    },
+    frontend: {
+      user: DEPLOY_USER,
+      host: DEPLOY_HOST,
+      ref: 'origin/review',
+      repo: DEPLOY_REPO,
+      path: '/home/user/frontend',
+      ssh_options: `IdentityFile=${DEPLOY_SSH_KEY}`,
+      'post-deploy': `
+        cd /home/user/frontend &&
         npm install &&
         NODE_OPTIONS=--openssl-legacy-provider npm run build &&
-        pm2 reload ecosystem.config.js --env production
+        pm2 reload ecosystem.config.js --only mesto-frontend
       `,
     },
   },
