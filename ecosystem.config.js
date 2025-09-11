@@ -45,13 +45,13 @@ module.exports = {
 
       'post-deploy': `
         # --- Бэкенд ---
-        cd ${DEPLOY_PATH}/backend &&
+        cd ${DEPLOY_PATH}/current/backend &&
         npm install &&
         npm run build &&
         pm2 reload ${DEPLOY_PATH}/ecosystem.config.js --only mesto-backend --env production &&
 
         # --- Фронтенд ---
-        cd ${DEPLOY_PATH}/frontend &&
+        cd ${DEPLOY_PATH}/current/frontend &&
         npm install &&
         NODE_OPTIONS=--openssl-legacy-provider npm run build &&
         pm2 reload ${DEPLOY_PATH}/ecosystem.config.js --only mesto-frontend --env production
