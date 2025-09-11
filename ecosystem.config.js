@@ -13,17 +13,9 @@ module.exports = {
     {
       name: 'mesto-backend',
       script: 'dist/app.js',
-      cwd: `${DEPLOY_PATH}/backend`,
+      cwd: '/home/user/current/backend',
       env: { NODE_ENV: 'production' },
       interpreter: 'node',
-      autorestart: true,
-    },
-    {
-      name: 'mesto-frontend',
-      script: 'npx',
-      args: 'serve -s build -l 3001',
-      cwd: `${DEPLOY_PATH}/frontend`,
-      env: { NODE_ENV: 'production' },
       autorestart: true,
     },
   ],
@@ -34,27 +26,28 @@ module.exports = {
       host: DEPLOY_HOST,
       repo: DEPLOY_REPO,
       ref: 'origin/review',
-      path: DEPLOY_PATH,
+      path: '/home/user',
       ssh_options: `IdentityFile=${DEPLOY_SSH_KEY}`,
 
       'pre-deploy': `
-        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p ${DEPLOY_PATH}" &&
-        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "rm -rf ${DEPLOY_PATH}/backend ${DEPLOY_PATH}/frontend" &&
-        git clone -b review ${DEPLOY_REPO} ${DEPLOY_PATH}
+        # создаём папки, чистим старое
+        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p /home/user/current /home/user/shared" &&
+        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "rm -rf /home/user/current/backend /home/user/current/frontend" &&
+        git clone -b review ${DEPLOY_REPO} /home/user/current
       `,
 
       'post-deploy': `
         # --- Бэкенд ---
-        cd ${DEPLOY_PATH}/current/backend &&
+        cd /home/user/current/backend &&
         npm install &&
         npm run build &&
-        pm2 reload ${DEPLOY_PATH}/ecosystem.config.js --only mesto-backend --env production &&
+        pm2 reload /home/user/current/ecosystem.config.js --only mesto-backend --env production &&
 
         # --- Фронтенд ---
-        cd ${DEPLOY_PATH}/current/frontend &&
+        cd /home/user/current/frontend &&
         npm install &&
-        NODE_OPTIONS=--openssl-legacy-provider npm run build &&
-        pm2 reload ${DEPLOY_PATH}/ecosystem.config.js --only mesto-frontend --env production
+        NODE_OPTIONS=--openssl-legacy-provider npm run build
+        # nginx отдаёт статические файлы, pm2 для фронта не нужен
       `,
     },
   },
