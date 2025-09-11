@@ -2,10 +2,10 @@
   "name": "web_canonicals_ru",
   "version": "1.0.0",
   "description": "Yandex.Praktikum canonical projects",
-  "main": "app.js",
+ "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node src/app.ts",
+    "start": "node dist/app.js",
     "dev": "ts-node-dev src/app.ts",
     "lint": "npx eslint src/**/*.ts"
   },
