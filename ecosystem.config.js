@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './.env.deploy' });
 
 const {
   DEPLOY_USER,
@@ -12,7 +12,7 @@ module.exports = {
   apps: [
     {
       name: 'mesto-backend',
-      script: 'dist/app.js', 
+      script: 'dist/app.js',
       cwd: './backend',
       env: { NODE_ENV: 'production' },
       interpreter: 'node',
