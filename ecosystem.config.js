@@ -32,20 +32,21 @@ module.exports = {
       host: DEPLOY_HOST,
       ref: 'origin/review',
       repo: DEPLOY_REPO,
-      path: DEPLOY_PATH,
+      path: `${DEPLOY_PATH}/backend`,
       ssh_options: `IdentityFile=${DEPLOY_SSH_KEY}`,
+      'pre-deploy': `
+        # создаём папку backend на сервере, если её нет
+        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p ${DEPLOY_PATH}/backend"
+      `,
       'post-deploy': `
         # Бэкенд
-        cd backend &&
         npm install &&
         npm run build &&
         pm2 reload ecosystem.config.js --only mesto-backend --env production &&
 
         # Фронтенд
-        cd ../frontend &&
-        npm install &&
-        NODE_OPTIONS=--openssl-legacy-provider npm run build &&
-        pm2 reload ecosystem.config.js --only mesto-frontend --env production
+        scp -r ../frontend/build/* ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/frontend/build &&
+        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "cd ${DEPLOY_PATH}/frontend && pm2 reload ecosystem.config.js --only mesto-frontend --env production"
       `,
     },
   },
