@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './.env.deploy' });
+require('dotenv').config({ path: '../.env.deploy' });
 
 const {
   DEPLOY_USER,
@@ -31,7 +31,7 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       ssh_options: DEPLOY_SSH_KEY ? `IdentityFile=${DEPLOY_SSH_KEY}` : '',
-      'pre-deploy': `scp backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/source/backend/.env && ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p ${DEPLOY_PATH}/source && cd ${DEPLOY_PATH}/source && git clone ${DEPLOY_REPO} . || git fetch && git checkout origin/${DEPLOY_REF}"`,
+      'pre-deploy': `[ -f ../backend/.env ] && scp ../backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/source/backend/.env || echo "No backend/.env found, skipping copy" && ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p ${DEPLOY_PATH}/source && cd ${DEPLOY_PATH}/source && git clone ${DEPLOY_REPO} . || git fetch && git checkout origin/${DEPLOY_REF}"`,
       'post-deploy': `cd ${DEPLOY_PATH}/source/backend && npm install && npm run build && pm2 startOrReload ${DEPLOY_PATH}/source/ecosystem-backend.config.js --only mesto-backend --env production`,
     },
   },
