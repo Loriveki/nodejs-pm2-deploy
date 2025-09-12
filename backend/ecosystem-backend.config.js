@@ -25,16 +25,16 @@ module.exports = {
     production: {
       user: DEPLOY_USER,
       host: DEPLOY_HOST,
-      ref: DEPLOY_REF,
+      ref: `origin/${DEPLOY_REF}`,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       ssh_options: DEPLOY_SSH_KEY ? `IdentityFile=${DEPLOY_SSH_KEY}` : '',
 
       'post-deploy': `
-      cd ${DEPLOY_PATH}/current/backend &&
-      npm install &&
-      npm run build &&
-      pm2 startOrReload ecosystem-backend.config.js --env production
+        cd ${DEPLOY_PATH}/current/backend &&
+        npm install &&
+        npm run build &&
+        pm2 startOrReload ecosystem-backend.config.js --env production
       `,
     },
   },
