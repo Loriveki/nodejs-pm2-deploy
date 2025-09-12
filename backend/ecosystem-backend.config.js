@@ -31,10 +31,10 @@ module.exports = {
       ssh_options: DEPLOY_SSH_KEY ? `IdentityFile=${DEPLOY_SSH_KEY}` : '',
 
       'post-deploy': `
-        cd ${DEPLOY_PATH}/current/backend &&
-        npm install &&
-        npm run build &&
-        pm2 reload ecosystem-backend.config.js --only mesto-backend --env production
+      cd ${DEPLOY_PATH}/current/backend &&
+      npm install &&
+      npm run build &&
+      pm2 startOrReload ecosystem-backend.config.js --env production
       `,
     },
   },
