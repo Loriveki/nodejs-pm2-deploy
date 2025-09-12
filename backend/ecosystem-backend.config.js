@@ -5,7 +5,7 @@ const {
   DEPLOY_HOST,
   DEPLOY_REPO,
   DEPLOY_PATH,
-  DEPLOY_REF = 'review',
+  DEPLOY_REF,
   DEPLOY_SSH_KEY,
 } = process.env;
 
@@ -14,12 +14,12 @@ module.exports = {
     {
       name: 'mesto-backend',
       script: 'dist/app.js',
+      watch: false,
+      autorestart: true,
+      max_restarts: 10,
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
       },
-      interpreter: 'node',
-      autorestart: true,
     },
   ],
 
@@ -30,15 +30,13 @@ module.exports = {
       ref: DEPLOY_REF,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
-      ssh_options: DEPLOY_SSH_KEY,
-
-      'pre-deploy-local': `[ -f backend/.env ] && scp backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/backend/.env || echo "No .env file to copy"`,
-
+      key: DEPLOY_SSH_KEY,
+      'pre-deploy': `scp ./*.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}`,
       'post-deploy': `
-        cd ${DEPLOY_PATH}/backend &&
+        cd ${DEPLOY_PATH}/current &&
         npm install &&
         npm run build &&
-        pm2 startOrReload ${DEPLOY_PATH}/ecosystem-backend.config.js --only mesto-backend --env production
+        pm2 reload ecosystem-backend.config.js --env production
       `,
     },
   },
