@@ -32,8 +32,8 @@ module.exports = {
 
       // Создание папки и клонирование репозитория
       'pre-deploy': `
-        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p ${DEPLOY_PATH}" &&
         ssh ${DEPLOY_USER}@${DEPLOY_HOST} "
+          mkdir -p ${DEPLOY_PATH} &&
           cd ${DEPLOY_PATH} &&
           if [ -d backend ]; then
             cd backend && git fetch && git reset --hard ${DEPLOY_REF} && git checkout ${DEPLOY_REF}
