@@ -25,10 +25,18 @@ module.exports = {
     production: {
       user: DEPLOY_USER,
       host: DEPLOY_HOST,
-      ref: `origin/${DEPLOY_REF}`,
       repo: DEPLOY_REPO,
+      ref: `origin/${DEPLOY_REF}`,
       path: DEPLOY_PATH,
       ssh_options: DEPLOY_SSH_KEY ? `IdentityFile=${DEPLOY_SSH_KEY}` : '',
+
+      'pre-setup': `
+        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p ${DEPLOY_PATH}"
+      `,
+
+      'post-setup': `
+        git clone -b ${DEPLOY_REF} ${DEPLOY_REPO} ${DEPLOY_PATH}/source
+      `,
 
       'post-deploy': `
         cd ${DEPLOY_PATH}/current/backend &&
