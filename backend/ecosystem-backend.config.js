@@ -1,7 +1,12 @@
 require('dotenv').config({ path: './.env.deploy' });
 
 const {
-  DEPLOY_USER, DEPLOY_HOST, DEPLOY_PATH, DEPLOY_REF, DEPLOY_REPO,
+  DEPLOY_USER,
+  DEPLOY_HOST,
+  DEPLOY_PATH,
+  DEPLOY_REF,
+  DEPLOY_REPO,
+  DEPLOY_SSH_KEY,
 } = process.env;
 
 module.exports = {
@@ -21,7 +26,8 @@ module.exports = {
       ref: DEPLOY_REF,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
-      'pre-deploy': `scp backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/backend/.env`,
+      ssh_options: [`IdentityFile=${DEPLOY_SSH_KEY}`, 'StrictHostKeyChecking=no'],
+      'pre-deploy': `scp -i ${DEPLOY_SSH_KEY} backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/backend/.env`,
       'post-deploy': `
         cd ${DEPLOY_PATH}/backend &&
         npm install &&
