@@ -30,7 +30,6 @@ module.exports = {
       ref: DEPLOY_REF,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
-      ssh_options: DEPLOY_SSH_KEY ? `-i ${DEPLOY_SSH_KEY}` : '',
 
       'pre-deploy-local': `[ -f ./backend/.env ] && scp ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/source/backend/.env || echo "No .env file to copy"`,
 
