@@ -31,7 +31,7 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
-      'pre-deploy': 'scp backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/.env',
+      'pre-deploy': 'scp $DEPLOY_LOCAL_ENV_PATH ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/.env',
       'post-deploy': `
         cd ${DEPLOY_PATH}/current &&
         npm install &&
