@@ -14,6 +14,7 @@ module.exports = {
     {
       name: 'mesto-backend',
       script: 'dist/app.js',
+      cwd: `${DEPLOY_PATH}/source/backend`,
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
@@ -27,19 +28,13 @@ module.exports = {
     production: {
       user: DEPLOY_USER,
       host: DEPLOY_HOST,
-      ref: DEPLOY_REF,
+      ref: `origin/${DEPLOY_REF}`,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       ssh_options: DEPLOY_SSH_KEY ? `IdentityFile=${DEPLOY_SSH_KEY}` : '',
-
-      'pre-deploy-local': `[ -f ./backend/.env ] && scp ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/source/backend/.env || echo "No .env file to copy"`,
-
-      'post-deploy': `
-        cd ${DEPLOY_PATH}/source/backend &&
-        npm install &&
-        npm run build &&
-        pm2 startOrReload ${DEPLOY_PATH}/source/ecosystem.config.js --only mesto-backend --env production
-      `,
+      'pre-deploy-local': `[ -f backend/.env ] && scp backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/source/backend/.env || echo "No .env file to copy"`,
+      'pre-deploy': `mkdir -p ${DEPLOY_PATH}/source && cd ${DEPLOY_PATH}/source && git clone ${DEPLOY_REPO} . || git fetch && git checkout origin/${DEPLOY_REF}`,
+      'post-deploy': `cd ${DEPLOY_PATH}/source/backend && npm install && npm run build && pm2 startOrReload ${DEPLOY_PATH}/source/ecosystem-backend.config.js --only mesto-backend --env production`,
     },
   },
 };
