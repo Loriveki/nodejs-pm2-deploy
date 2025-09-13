@@ -25,8 +25,9 @@ module.exports = {
       key: '/home/loriveki/.ssh/new_key/private_key',
 
       'pre-deploy-local': `
-        echo "Copying .env to server..." &&
-        scp -i /home/loriveki/.ssh/new_key/private_key ./backend/.env user@158.160.185.102:/home/user/shared/.env
+      echo "Copying .env to server..." &&
+      ssh -i /home/loriveki/.ssh/new_key/private_key user@158.160.185.102 "mkdir -p /home/user/shared" &&
+      scp -i /home/loriveki/.ssh/new_key/private_key ./backend/.env user@158.160.185.102:/home/user/shared/.env
       `,
 
       'post-deploy': `
