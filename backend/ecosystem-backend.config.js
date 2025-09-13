@@ -33,7 +33,7 @@ module.exports = {
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
 
-      'pre-deploy-local': `
+      'pre-deploy': `
         echo ">>> [LOCAL] Copying .env to server..." &&
         scp -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env &&
         echo ">>> [LOCAL] .env copied successfully"
