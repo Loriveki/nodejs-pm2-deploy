@@ -36,19 +36,18 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
-      'pre-deploy-local': `echo "Pre-deploy local hook executed"`,
+
+      'pre-deploy-local': `
+        echo "Copying .env to server..." &&
+        scp -i ${DEPLOY_SSH_KEY} ${LOCAL_ENV_PATH} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/backend/.env
+      `,
+
       'post-deploy': `
-        # Скопировать .env с локальной машины на сервер
-        scp -i ${DEPLOY_SSH_KEY} ${LOCAL_ENV_PATH} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/backend/.env &&
-
-        # Зайти в директорию backend на сервере
+        export NVM_DIR="$HOME/.nvm" &&
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
         cd ${DEPLOY_PATH}/backend &&
-
-        # Установить зависимости и собрать TypeScript
         npm install &&
         npx tsc &&
-
-        # Перезапустить сервис через PM2
         pm2 startOrReload ${DEPLOY_PATH}/backend/ecosystem-backend.config.js --env production
       `,
     },
