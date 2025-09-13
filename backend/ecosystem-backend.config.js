@@ -15,6 +15,7 @@ module.exports = {
       name: 'backend-service',
       script: './dist/app.js',
       cwd: './backend',
+      interpreter: '/home/user/.nvm/versions/node/v22.19.0/bin/node',
       watch: false,
       instances: 1,
       autorestart: true,
