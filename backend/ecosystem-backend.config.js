@@ -29,7 +29,7 @@ module.exports = {
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `scp -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
-      'post-deploy': 'npm install && npm run build && cp ~/shared/.env ./.env && pm2 reload ecosystem-backend.config.js --env production',
+      'post-deploy': 'export NVM_DIR="$HOME/.nvm" && source $NVM_DIR/nvm.sh && npm install && npm run build && cp ../shared/.env ./.env && pm2 reload ecosystem-backend.config.js --env production',
     },
   },
 };
