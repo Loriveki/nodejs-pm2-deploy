@@ -9,15 +9,13 @@ const {
   DEPLOY_SSH_KEY,
 } = process.env;
 
-const NODE_INTERPRETER = '/home/user/.nvm/versions/node/v22.19.0/bin/node';
-
 module.exports = {
   apps: [
     {
       name: 'backend-service',
       script: './dist/app.js',
       cwd: './backend',
-      interpreter: NODE_INTERPRETER,
+      interpreter: '/home/user/.nvm/versions/node/v22.19.0/bin/node',
       watch: false,
       instances: 1,
       autorestart: true,
@@ -37,8 +35,6 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `echo "Pre-deploy local hook executed"`,
       'post-deploy': `
-        export NVM_DIR="$HOME/.nvm" &&
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
         cd backend &&
         npm install &&
         npx tsc &&
