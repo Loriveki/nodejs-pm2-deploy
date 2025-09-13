@@ -6,6 +6,7 @@ const {
   DEPLOY_PATH,
   DEPLOY_REF,
   DEPLOY_REPO,
+  DEPLOY_SSH_KEY,
 } = process.env;
 
 module.exports = {
@@ -26,6 +27,7 @@ module.exports = {
       ref: DEPLOY_REF,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
+      key: DEPLOY_SSH_KEY,
       'pre-deploy': `scp ./.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/current/.env`,
       'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production',
     },
