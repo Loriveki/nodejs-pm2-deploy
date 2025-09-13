@@ -13,7 +13,8 @@ module.exports = {
   apps: [
     {
       name: 'backend-service',
-      script: './dist/app.js',
+      script: './backend/dist/app.js',
+      cwd: './backend',
       watch: false,
       instances: 1,
       autorestart: true,
@@ -29,11 +30,14 @@ module.exports = {
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `scp -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
-      'post-deploy': 'export NVM_DIR="$HOME/.nvm" && \
-      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-      npm install && npm run build && \
-      cp ../shared/.env ./.env && \
-      pm2 startOrReload ecosystem-backend.config.js --env production',
-  },
+      'post-deploy': `
+        export NVM_DIR="$HOME/.nvm" &&
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
+        cd backend &&
+        npm install &&
+        cp ../shared/.env ./.env &&
+        pm2 startOrReload ../ecosystem-backend.config.js --env production
+      `,
+    },
   },
 };
