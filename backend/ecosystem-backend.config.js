@@ -33,16 +33,27 @@ module.exports = {
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
 
-      'pre-deploy-local': `scp -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
+      'pre-deploy-local': `
+        echo ">>> [LOCAL] Copying .env to server..." &&
+        scp -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env &&
+        echo ">>> [LOCAL] .env copied successfully"
+      `,
 
       'post-deploy': `
+        echo ">>> [REMOTE] Starting post-deploy steps" &&
         export NVM_DIR="$HOME/.nvm" &&
         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" &&
+        echo ">>> [REMOTE] Using Node: $(node -v)" &&
         cd ${DEPLOY_PATH}/current/backend &&
+        echo ">>> [REMOTE] Copying .env from shared to backend" &&
         cp ${DEPLOY_PATH}/shared/.env ./.env &&
+        echo ">>> [REMOTE] Installing dependencies" &&
         npm install &&
+        echo ">>> [REMOTE] Compiling TypeScript" &&
         npx tsc &&
-        pm2 startOrReload ecosystem-backend.config.js --env production
+        echo ">>> [REMOTE] Restarting PM2 service" &&
+        pm2 startOrReload ecosystem-backend.config.js --env production &&
+        echo ">>> [REMOTE] Post-deploy finished"
       `,
     },
   },
