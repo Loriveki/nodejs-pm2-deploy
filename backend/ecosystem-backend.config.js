@@ -7,6 +7,7 @@ const {
   DEPLOY_REF,
   DEPLOY_REPO,
   DEPLOY_SSH_KEY,
+  LOCAL_ENV_PATH,
 } = process.env;
 
 const NODE_INTERPRETER = '/home/user/.nvm/versions/node/v22.19.0/bin/node';
@@ -37,22 +38,18 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `echo "Pre-deploy local hook executed"`,
       'post-deploy': `
-        # Загружаем Node через nvm
-        export NVM_DIR="$HOME/.nvm" &&
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
+        # Скопировать .env с локальной машины на сервер
+        scp -i ${DEPLOY_SSH_KEY} ${LOCAL_ENV_PATH} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/backend/.env &&
 
-        # Переходим в backend
-        cd backend &&
+        # Зайти в директорию backend на сервере
+        cd ${DEPLOY_PATH}/backend &&
 
-        # Устанавливаем зависимости и компилируем TypeScript
+        # Установить зависимости и собрать TypeScript
         npm install &&
         npx tsc &&
 
-        # Копируем .env с локальной машины на сервер
-        scp -i $DEPLOY_SSH_KEY $PWD/../shared/.env $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/backend/.env &&
-
-        # Перезапускаем приложение через PM2
-        pm2 startOrReload ../ecosystem-backend.config.js --env production
+        # Перезапустить сервис через PM2
+        pm2 startOrReload ${DEPLOY_PATH}/backend/ecosystem-backend.config.js --env production
       `,
     },
   },
