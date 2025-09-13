@@ -1,23 +1,26 @@
-require('dotenv').config({ path: '.env.deploy' });
+require('dotenv').config({ path: './backend/.env.deploy' });
 
 const {
   DEPLOY_USER,
   DEPLOY_HOST,
-  DEPLOY_PATH,
-  DEPLOY_REF = 'origin/review',
   DEPLOY_REPO,
+  DEPLOY_PATH,
+  DEPLOY_REF = 'origin/master',
   DEPLOY_SSH_KEY,
 } = process.env;
+
+const path = require('path');
+
+const localEnvPath = path.resolve(__dirname, '.env');
 
 module.exports = {
   apps: [
     {
-      name: 'backend-service',
-      script: './dist/app.js',
-      cwd: './backend',
-      instances: 1,
-      autorestart: true,
+      name: 'mesto-backend',
+      script: 'dist/app.js',
       watch: false,
+      autorestart: true,
+      max_restarts: 10,
       env: {
         NODE_ENV: 'production',
       },
@@ -32,25 +35,13 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
-'pre-deploy-local': `
-  echo "Starting pre-deploy-local" &&
-  scp -v -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env &&
-  echo "Finished pre-deploy-local"
-`,
-
+      'pre-deploy': `scp "${localEnvPath}" ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/.env`,
       'post-deploy': `
-  echo "Post-deploy started" &&
-  export NVM_DIR="$HOME/.nvm" &&
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" &&
-  cd ${DEPLOY_PATH}/current/backend &&
-  echo "Current dir: $(pwd)" &&
-  cp ${DEPLOY_PATH}/shared/.env ./.env &&
-  echo ".env copied" &&
-  npm install &&
-  npx tsc &&
-  pm2 startOrReload ecosystem-backend.config.js --env production &&
-  echo "Post-deploy finished"
-`,
+        cd ${DEPLOY_PATH}/current &&
+        npm install &&
+        npm run build &&
+        pm2 reload backend/ecosystem-backend.config.js --env production
+      `,
     },
   },
 };
