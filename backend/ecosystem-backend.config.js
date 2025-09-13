@@ -13,7 +13,7 @@ module.exports = {
   apps: [
     {
       name: 'backend-service',
-      script: './backend/dist/app.js',
+      script: './dist/app.js',
       cwd: './backend',
       watch: false,
       instances: 1,
