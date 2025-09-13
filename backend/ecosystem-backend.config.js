@@ -32,13 +32,11 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
-
-      'pre-deploy-local': `
-      echo "Starting pre-deploy-local" &&
-      echo "Copying .env from ./backend/.env to ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env" &&
-      scp -v -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env &&
-      echo "Finished pre-deploy-local"
-    `,
+'pre-deploy-local': `
+  echo "Starting pre-deploy-local" &&
+  scp -v -i ${DEPLOY_SSH_KEY} ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env &&
+  echo "Finished pre-deploy-local"
+`,
 
       'post-deploy': `
   echo "Post-deploy started" &&
