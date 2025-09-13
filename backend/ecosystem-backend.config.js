@@ -38,17 +38,18 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
 
       'pre-deploy-local': `
-        echo "Copying .env to server..." &&
-        scp -i ${DEPLOY_SSH_KEY} ${LOCAL_ENV_PATH} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/backend/.env
+        echo "Copying .env to server shared folder..." &&
+        scp -i ${DEPLOY_SSH_KEY} ${LOCAL_ENV_PATH} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env
       `,
 
       'post-deploy': `
         export NVM_DIR="$HOME/.nvm" &&
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
-        cd ${DEPLOY_PATH}/backend &&
+        cd ${DEPLOY_PATH}/current/backend &&
+        cp ${DEPLOY_PATH}/shared/.env ./.env &&
         npm install &&
         npx tsc &&
-        pm2 startOrReload ${DEPLOY_PATH}/backend/ecosystem-backend.config.js --env production
+        pm2 startOrReload ${DEPLOY_PATH}/current/backend/ecosystem-backend.config.js --env production
       `,
     },
   },
