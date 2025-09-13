@@ -33,10 +33,11 @@ module.exports = {
       'post-deploy': `
         export NVM_DIR="$HOME/.nvm" &&
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
+        npm install --prefix backend &&
+        cp ${DEPLOY_PATH}/shared/.env backend/.env &&
         cd backend &&
-        npm install &&
-        cp ../shared/.env ./.env &&
-        pm2 startOrReload ../ecosystem-backend.config.js --env production
+        npx tsc &&
+        pm2 startOrReload dist/app.js --name backend-service
       `,
     },
   },
