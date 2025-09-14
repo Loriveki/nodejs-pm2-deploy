@@ -23,7 +23,8 @@ module.exports = {
     },
   ],
 
- production: {
+ deploy: {
+  production: {
   user: DEPLOY_USER,
   host: DEPLOY_HOST,
   ref: DEPLOY_REF,
@@ -37,5 +38,6 @@ module.exports = {
     npm run build &&
     pm2 reload backend/ecosystem-backend.config.js --env production
   `,
+},
 },
 };
