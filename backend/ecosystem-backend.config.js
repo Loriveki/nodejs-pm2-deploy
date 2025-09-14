@@ -1,17 +1,13 @@
-require('dotenv').config({ path: './backend/.env.deploy' });
+require('dotenv').config({ path: '.env.deploy' });
 
 const {
   DEPLOY_USER,
   DEPLOY_HOST,
   DEPLOY_REPO,
   DEPLOY_PATH,
-  DEPLOY_REF = 'origin/master',
+  DEPLOY_REF,
   DEPLOY_SSH_KEY,
 } = process.env;
-
-const path = require('path');
-
-const localEnvPath = path.resolve(__dirname, '.env');
 
 module.exports = {
   apps: [
