@@ -1,5 +1,7 @@
 require('dotenv').config({ path: '.env.deploy' });
 
+const path = require('path');
+
 const {
   DEPLOY_USER,
   DEPLOY_HOST,
@@ -8,6 +10,8 @@ const {
   DEPLOY_REF,
   DEPLOY_SSH_KEY,
 } = process.env;
+
+const LOCAL_ENV = path.resolve(__dirname, 'backend/.env');
 
 module.exports = {
   apps: [
@@ -32,12 +36,12 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
-      'pre-deploy': `scp ${process.env.LOCAL_ENV_PATH} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
+      'pre-deploy': `scp -i ${DEPLOY_SSH_KEY} ${LOCAL_ENV} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
       'post-deploy': `
         cd ${DEPLOY_PATH}/current &&
         npm install &&
         npm run build &&
-        pm2 startOrReload /home/loriveki/nodejs-pm2-deploy/backend/ecosystem-backend.config.js --env production
+        pm2 startOrReload ${path.resolve(__dirname, 'backend/ecosystem-backend.config.js')} --env production
       `,
     },
   },
