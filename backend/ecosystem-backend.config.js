@@ -37,8 +37,9 @@ module.exports = {
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
         cd ${DEPLOY_PATH}/current/backend &&
+        npm install typescript &&
         npm install &&
-        npm run build &&
+        npm run build && ls -la dist/app.js || echo "Build failed" &&
         pm2 startOrReload ${path.resolve(__dirname, 'ecosystem-backend.config.js')} --env production
       `,
     },
