@@ -39,23 +39,21 @@ module.exports = {
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
         set -e &&
-        export LANG=en_US.UTF-8 &&
-        export LC_ALL=en_US.UTF-8 &&
-        echo "Starting post-deploy at $(date)..." > /home/user/post-deploy.log &&
-        echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log &&
-        echo "Checking /home/user permissions..." >> /home/user/post-deploy.log &&
-        ls -ld /home/user >> /home/user/post-deploy.log 2>&1 &&
-        echo "Checking /home/user/current/backend..." >> /home/user/post-deploy.log &&
-        ls -ld /home/user/current/backend >> /home/user/post-deploy.log 2>&1 || { echo "Directory /home/user/current/backend not found" >> /home/user/post-deploy.log; exit 1; } &&
-        cd /home/user/current/backend || { echo "Failed to cd to /home/user/current/backend" >> /home/user/post-deploy.log; exit 1; } &&
-        echo "Checking post-deploy.sh..." >> /home/user/post-deploy.log &&
-        ls -l post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "post-deploy.sh not found" >> /home/user/post-deploy.log; exit 1; } &&
-        chmod +x post-deploy.sh || { echo "Failed to chmod post-deploy.sh" >> /home/user/post-deploy.log; exit 1; } &&
-        echo "Initializing NVM..." >> /home/user/post-deploy.log &&
+        echo "Starting post-deploy at $(date)..." > /home/user/post-deploy.log 2>&1 || { echo "Failed to write to /home/user/post-deploy.log" >> /home/user/post-deploy-error.log; exit 1; } &&
+        echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log 2>&1 &&
+        echo "Checking /home/user permissions..." >> /home/user/post-deploy.log 2>&1 &&
+        ls -ld /home/user >> /home/user/post-deploy.log 2>&1 || { echo "Failed to list /home/user" >> /home/user/post-deploy-error.log; exit 1; } &&
+        echo "Checking /home/user/current/backend..." >> /home/user/post-deploy.log 2>&1 &&
+        ls -ld /home/user/current/backend >> /home/user/post-deploy.log 2>&1 || { echo "Directory /home/user/current/backend not found" >> /home/user/post-deploy-error.log; exit 1; } &&
+        cd /home/user/current/backend || { echo "Failed to cd to /home/user/current/backend" >> /home/user/post-deploy-error.log; exit 1; } &&
+        echo "Checking post-deploy.sh..." >> /home/user/post-deploy.log 2>&1 &&
+        ls -l post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "post-deploy.sh not found" >> /home/user/post-deploy-error.log; exit 1; } &&
+        chmod +x post-deploy.sh || { echo "Failed to chmod post-deploy.sh" >> /home/user/post-deploy-error.log; exit 1; } &&
+        echo "Initializing NVM..." >> /home/user/post-deploy.log 2>&1 &&
         export NVM_DIR="$HOME/.nvm" &&
-        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || { echo "Failed to initialize NVM" >> /home/user/post-deploy.log; exit 1; } &&
-        echo "Running post-deploy.sh..." >> /home/user/post-deploy.log &&
-        bash post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "Failed to run post-deploy.sh" >> /home/user/post-deploy.log; exit 1; }
+        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || { echo "Failed to initialize NVM" >> /home/user/post-deploy-error.log; exit 1; } &&
+        echo "Running post-deploy.sh..." >> /home/user/post-deploy.log 2>&1 &&
+        bash post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "Failed to run post-deploy.sh" >> /home/user/post-deploy-error.log; exit 1; }
       `,
     },
   },
