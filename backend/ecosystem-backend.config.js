@@ -10,7 +10,8 @@ const {
   DEPLOY_SSH_KEY,
 } = process.env;
 
-const LOCAL_ENV = path.resolve(__dirname, 'backend/.env');
+const LOCAL_ENV = path.resolve(__dirname, '.env');
+console.log('LOCAL_ENV:', LOCAL_ENV);
 
 module.exports = {
   apps: [
