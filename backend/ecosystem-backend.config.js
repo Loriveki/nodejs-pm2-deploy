@@ -41,8 +41,6 @@ module.exports = {
         set -e &&
         echo "Starting post-deploy at $(date)..." > /home/user/post-deploy.log &&
         echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log &&
-        export NVM_DIR="$HOME/.nvm" &&
-        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" &&
         cd /home/user/current/backend &&
         chmod +x post-deploy.sh &&
         bash post-deploy.sh >> /home/user/post-deploy.log 2>&1
