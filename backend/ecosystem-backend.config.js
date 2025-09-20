@@ -47,6 +47,9 @@ module.exports = {
         echo "Checking post-deploy.sh..." >> /home/user/post-deploy.log &&
         ls -l post-deploy.sh >> /home/user/post-deploy.log 2>&1 &&
         chmod +x post-deploy.sh || { echo "Failed to chmod post-deploy.sh" >> /home/user/post-deploy.log; exit 1; } &&
+        echo "Initializing NVM..." >> /home/user/post-deploy.log &&
+        export NVM_DIR="$HOME/.nvm" &&
+        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || { echo "Failed to initialize NVM" >> /home/user/post-deploy.log; exit 1; } &&
         echo "Running post-deploy.sh..." >> /home/user/post-deploy.log &&
         bash post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "Failed to run post-deploy.sh" >> /home/user/post-deploy.log; exit 1; }
       `,
