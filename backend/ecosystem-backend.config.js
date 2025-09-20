@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './backend/.env.deploy' });
+require('dotenv').config({ path: '.env.deploy' });
 
 const {
   DEPLOY_USER,
@@ -14,8 +14,9 @@ module.exports = {
     {
       name: 'mesto-backend',
       script: 'dist/app.js',
+      cwd: `${DEPLOY_PATH}/current`,
       watch: false,
-      autorestart: true, 
+      autorestart: true,
       max_restarts: 10,
       env: {
         NODE_ENV: 'production',
@@ -30,13 +31,13 @@ module.exports = {
       ref: DEPLOY_REF,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
-      key: DEPLOY_SSH_KEY, 
+      key: DEPLOY_SSH_KEY,
       'pre-deploy': `scp ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
       'post-deploy': `
         cd ${DEPLOY_PATH}/current &&
         npm install &&
         npm run build &&
-        pm2 reload backend/ecosystem-backend.config.js --env production
+        pm2 startOrReload backend/ecosystem-backend.config.js --env production
       `,
     },
   },
