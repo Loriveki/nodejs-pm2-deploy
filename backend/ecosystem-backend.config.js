@@ -1,5 +1,4 @@
 require('dotenv').config({ path: '.env.deploy' });
-
 const path = require('path');
 
 const {
@@ -11,14 +10,14 @@ const {
   DEPLOY_SSH_KEY,
 } = process.env;
 
-const LOCAL_ENV = path.resolve(__dirname, '.env');
+const LOCAL_ENV = path.resolve(__dirname, 'backend/.env');
 
 module.exports = {
   apps: [
     {
       name: 'mesto-backend',
       script: 'dist/app.js',
-      cwd: `${DEPLOY_PATH}/current`,
+      cwd: `${DEPLOY_PATH}/current`,  
       watch: false,
       autorestart: true,
       max_restarts: 10,
