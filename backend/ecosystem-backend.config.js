@@ -30,21 +30,21 @@ module.exports = {
 
   deploy: {
     production: {
-      user: DEPLOY_USER,
-      host: DEPLOY_HOST,
-      ref: DEPLOY_REF,
-      repo: DEPLOY_REPO,
-      path: DEPLOY_PATH,
-      key: DEPLOY_SSH_KEY,
+      user: DEPLOY_USER || 'user',
+      host: DEPLOY_HOST || '158.160.185.102',
+      ref: DEPLOY_REF || 'origin/review',
+      repo: DEPLOY_REPO || 'https://github.com/Loriveki/nodejs-pm2-deploy.git',
+      path: DEPLOY_PATH || '/home/user',
+      key: DEPLOY_SSH_KEY || '/home/loriveki/.ssh/mesto_server',
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
         set -e &&
-        echo "Starting post-deploy..." &&
-        echo "DEPLOY_PATH is ${DEPLOY_PATH}" &&
+        echo "Starting post-deploy at $(date)..." > /home/user/post-deploy.log &&
+        echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log &&
         cd /home/user/current/backend &&
         chmod +x post-deploy.sh &&
         source /etc/profile &&
-        bash post-deploy.sh
+        bash post-deploy.sh >> /home/user/post-deploy.log 2>&1
       `,
     },
   },
