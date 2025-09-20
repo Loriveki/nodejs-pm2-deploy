@@ -39,6 +39,8 @@ module.exports = {
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
         set -e &&
+        export LANG=en_US.UTF-8 &&
+        export LC_ALL=en_US.UTF-8 &&
         echo "Starting post-deploy at $(date)..." > /home/user/post-deploy.log &&
         echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log &&
         echo "Checking directory /home/user/current/backend..." >> /home/user/post-deploy.log &&

@@ -1,12 +1,16 @@
 #!/bin/bash
 set -e
 
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 echo "=== Post-deploy started at $(date) ===" >> /home/user/post-deploy.log
 echo "Current directory: $(pwd)" >> /home/user/post-deploy.log
 echo "PATH: $PATH" >> /home/user/post-deploy.log
+echo "LANG: $LANG" >> /home/user/post-deploy.log
 
 echo "Installing typescript..." >> /home/user/post-deploy.log
 /home/user/.nvm/versions/node/v18.20.8/bin/npm install typescript >> /home/user/post-deploy.log 2>&1
