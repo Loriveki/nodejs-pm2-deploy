@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Current directory: $(pwd)"
 echo "Checking .env file..."
 ls -la /home/loriveki/nodejs-pm2-deploy/backend/.env

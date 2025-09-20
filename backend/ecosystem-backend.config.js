@@ -38,13 +38,13 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
-        echo "Starting post-deploy at $(date)" > /home/user/post-deploy.log &&
-        echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log &&
-        whoami >> /home/user/post-deploy.log &&
-        pwd >> /home/user/post-deploy.log &&
-        ls -la /home/user/current/backend/post-deploy.sh >> /home/user/post-deploy.log &&
-        chmod +x /home/user/current/backend/post-deploy.sh >> /home/user/post-deploy.log 2>&1 &&
-        bash /home/user/current/backend/post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "Failed to run post-deploy.sh" >> /home/user/post-deploy.log; exit 1; }
+        set -e &&
+        echo "Starting post-deploy..." &&
+        echo "DEPLOY_PATH is ${DEPLOY_PATH}" &&
+        cd /home/user/current/backend &&
+        chmod +x post-deploy.sh &&
+        source /etc/profile &&
+        bash post-deploy.sh
       `,
     },
   },
