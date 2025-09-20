@@ -21,7 +21,7 @@ module.exports = {
       watch: false,
       autorestart: true,
       max_restarts: 10,
-      env_production: { 
+      env_production: {
         NODE_ENV: 'production',
         DOTENV_CONFIG_PATH: '/home/user/shared/.env',
       },
@@ -38,11 +38,11 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
-        echo "Starting post-deploy..." &&
-        echo "DEPLOY_PATH is ${DEPLOY_PATH}" &&
-        cd ${DEPLOY_PATH}/current/backend || { echo "Failed to cd to ${DEPLOY_PATH}/current/backend"; exit 1; } &&
-        chmod +x post-deploy.sh || { echo "Failed to chmod post-deploy.sh"; exit 1; } &&
-        bash post-deploy.sh || { echo "Failed to run post-deploy.sh"; exit 1; }
+        echo "Starting post-deploy..." > /home/user/post-deploy.log &&
+        echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log &&
+        cd /home/user/current/backend || { echo "Failed to cd to /home/user/current/backend" >> /home/user/post-deploy.log; exit 1; } &&
+        chmod +x post-deploy.sh || { echo "Failed to chmod post-deploy.sh" >> /home/user/post-deploy.log; exit 1; } &&
+        bash post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "Failed to run post-deploy.sh" >> /home/user/post-deploy.log; exit 1; }
       `,
     },
   },
