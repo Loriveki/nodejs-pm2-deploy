@@ -10,19 +10,18 @@ const {
   DEPLOY_SSH_KEY,
 } = process.env;
 
-const LOCAL_ENV = path.resolve(__dirname, '.env');
-
 module.exports = {
   apps: [
     {
       name: 'mesto-backend',
-      script: 'dist/app.js',
-      cwd: `${DEPLOY_PATH}/current`,  
+      script: 'backend/dist/app.js',
+      cwd: `${DEPLOY_PATH}/current`,
       watch: false,
       autorestart: true,
       max_restarts: 10,
       env: {
         NODE_ENV: 'production',
+        DOTENV_CONFIG_PATH: `${DEPLOY_PATH}/shared/.env`,
       },
     },
   ],
@@ -37,7 +36,7 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
-        cd ${DEPLOY_PATH}/current &&
+        cd ${DEPLOY_PATH}/current/backend &&
         npm install &&
         npm run build &&
         pm2 startOrReload ${path.resolve(__dirname, 'ecosystem-backend.config.js')} --env production
