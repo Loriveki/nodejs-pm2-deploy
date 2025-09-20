@@ -38,11 +38,13 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
-        echo "Starting post-deploy..." > /home/user/post-deploy.log &&
+        echo "Starting post-deploy at $(date)" > /home/user/post-deploy.log &&
         echo "DEPLOY_PATH is ${DEPLOY_PATH}" >> /home/user/post-deploy.log &&
-        cd /home/user/current/backend || { echo "Failed to cd to /home/user/current/backend" >> /home/user/post-deploy.log; exit 1; } &&
-        chmod +x post-deploy.sh || { echo "Failed to chmod post-deploy.sh" >> /home/user/post-deploy.log; exit 1; } &&
-        bash post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "Failed to run post-deploy.sh" >> /home/user/post-deploy.log; exit 1; }
+        whoami >> /home/user/post-deploy.log &&
+        pwd >> /home/user/post-deploy.log &&
+        ls -la /home/user/current/backend/post-deploy.sh >> /home/user/post-deploy.log &&
+        chmod +x /home/user/current/backend/post-deploy.sh >> /home/user/post-deploy.log 2>&1 &&
+        bash /home/user/current/backend/post-deploy.sh >> /home/user/post-deploy.log 2>&1 || { echo "Failed to run post-deploy.sh" >> /home/user/post-deploy.log; exit 1; }
       `,
     },
   },
