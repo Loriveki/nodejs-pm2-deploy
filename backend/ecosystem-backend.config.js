@@ -32,12 +32,12 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
-      'pre-deploy': `scp ./backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
+      'pre-deploy': `scp ${process.env.LOCAL_ENV_PATH} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
       'post-deploy': `
         cd ${DEPLOY_PATH}/current &&
         npm install &&
         npm run build &&
-        pm2 startOrReload backend/ecosystem-backend.config.js --env production
+        pm2 startOrReload /home/loriveki/nodejs-pm2-deploy/backend/ecosystem-backend.config.js --env production
       `,
     },
   },
