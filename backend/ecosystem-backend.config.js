@@ -11,7 +11,6 @@ const {
 } = process.env;
 
 const LOCAL_ENV = path.resolve(__dirname, '.env');
-console.log('LOCAL_ENV:', LOCAL_ENV);
 
 module.exports = {
   apps: [
@@ -36,12 +35,12 @@ module.exports = {
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
       key: DEPLOY_SSH_KEY,
-      'pre-deploy': `scp -i ${DEPLOY_SSH_KEY} ${LOCAL_ENV} ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
+      'pre-deploy': `scp -i ${DEPLOY_SSH_KEY} /home/loriveki/nodejs-pm2-deploy/backend/.env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/shared/.env`,
       'post-deploy': `
         cd ${DEPLOY_PATH}/current &&
         npm install &&
         npm run build &&
-        pm2 startOrReload ${path.resolve(__dirname, 'backend/ecosystem-backend.config.js')} --env production
+        pm2 startOrReload ${path.resolve(__dirname, 'ecosystem-backend.config.js')} --env production
       `,
     },
   },
