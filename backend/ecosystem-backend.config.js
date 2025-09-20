@@ -16,14 +16,14 @@ module.exports = {
   apps: [
     {
       name: 'mesto-backend',
-      script: 'backend/dist/app.js',
-      cwd: `${DEPLOY_PATH}/current`,
+      script: '/home/user/current/backend/dist/app.js', 
+      cwd: '/home/user/current/backend',
       watch: false,
       autorestart: true,
       max_restarts: 10,
       env: {
         NODE_ENV: 'production',
-        DOTENV_CONFIG_PATH: `${DEPLOY_PATH}/shared/.env`,
+        DOTENV_CONFIG_PATH: '/home/user/shared/.env',
       },
     },
   ],
@@ -39,8 +39,8 @@ module.exports = {
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
         echo "Starting post-deploy..." &&
-        cd ${DEPLOY_PATH}/current/backend &&
-        bash post-deploy.sh
+        cd ${DEPLOY_PATH}/current/backend || { echo "Failed to cd to ${DEPLOY_PATH}/current/backend"; exit 1; } &&
+        bash post-deploy.sh || { echo "Failed to run post-deploy.sh"; exit 1; }
       `,
     },
   },
