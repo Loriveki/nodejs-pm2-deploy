@@ -37,13 +37,7 @@ module.exports = {
       path: DEPLOY_PATH || '/home/user',
       key: DEPLOY_SSH_KEY || '/home/loriveki/.ssh/mesto_server',
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
-      'post-deploy': `
-        set -e &&
-        echo "Starting post-deploy at $(date)..." > /home/user/post-deploy.log 2>&1 &&
-        echo "Test minimal post-deploy" >> /home/user/post-deploy.log 2>&1 &&
-        cd /home/user/current/backend &&
-        bash post-deploy.sh >> /home/user/post-deploy.log 2>&1
-      `,
+      'post-deploy': `bash /home/user/current/backend/post-deploy.sh`,
     },
   },
 };

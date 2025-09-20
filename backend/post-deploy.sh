@@ -1,50 +1,62 @@
 #!/bin/bash
 set -e
 
+# Установка локали
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
+# Логирование
+/bin/echo "Starting post-deploy at $(/bin/date)..." > /home/user/post-deploy.log 2>&1
+/bin/echo "DEPLOY_PATH is $DEPLOY_PATH" >> /home/user/post-deploy.log 2>&1
+/bin/echo "Checking /home/user permissions..." >> /home/user/post-deploy.log 2>&1
+/bin/ls -ld /home/user >> /home/user/post-deploy.log 2>&1 || { /bin/echo "Failed to list /home/user" >> /home/user/post-deploy-error.log; exit 1; }
+/bin/echo "Checking /home/user/current/backend..." >> /home/user/post-deploy.log 2>&1
+/bin/ls -ld /home/user/current/backend >> /home/user/post-deploy.log 2>&1 || { /bin/echo "Directory /home/user/current/backend not found" >> /home/user/post-deploy-error.log; exit 1; }
+cd /home/user/current/backend || { /bin/echo "Failed to cd to /home/user/current/backend" >> /home/user/post-deploy-error.log; exit 1; }
+
+# Инициализация NVM
+/bin/echo "Initializing NVM..." >> /home/user/post-deploy.log 2>&1
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || { /bin/echo "Failed to initialize NVM" >> /home/user/post-deploy-error.log; exit 1; }
 
-echo "=== Post-deploy started at $(date) ===" >> /home/user/post-deploy.log
-echo "Current directory: $(pwd)" >> /home/user/post-deploy.log
-echo "PATH: $PATH" >> /home/user/post-deploy.log
-echo "LANG: $LANG" >> /home/user/post-deploy.log
-
-echo "Installing typescript..." >> /home/user/post-deploy.log
+# Установка typescript
+/bin/echo "Installing typescript..." >> /home/user/post-deploy.log 2>&1
 /home/user/.nvm/versions/node/v18.20.8/bin/npm install typescript >> /home/user/post-deploy.log 2>&1
 if [ $? -ne 0 ]; then
-  echo "Failed to install typescript" >> /home/user/post-deploy.log
+  /bin/echo "Failed to install typescript" >> /home/user/post-deploy.log 2>&1
   exit 1
 fi
 
-echo "Installing dependencies..." >> /home/user/post-deploy.log
+# Установка зависимостей
+/bin/echo "Installing dependencies..." >> /home/user/post-deploy.log 2>&1
 /home/user/.nvm/versions/node/v18.20.8/bin/npm install >> /home/user/post-deploy.log 2>&1
 if [ $? -ne 0 ]; then
-  echo "Failed to install dependencies" >> /home/user/post-deploy.log
+  /bin/echo "Failed to install dependencies" >> /home/user/post-deploy.log 2>&1
   exit 1
 fi
 
-echo "Running build..." >> /home/user/post-deploy.log
+# Сборка
+/bin/echo "Running build..." >> /home/user/post-deploy.log 2>&1
 /home/user/.nvm/versions/node/v18.20.8/bin/npm run build >> /home/user/post-deploy.log 2>&1
 if [ $? -ne 0 ]; then
-  echo "Build failed" >> /home/user/post-deploy.log
+  /bin/echo "Build failed" >> /home/user/post-deploy.log 2>&1
   exit 1
 fi
 
-echo "Checking dist/app.js..." >> /home/user/post-deploy.log
-ls -la dist/app.js >> /home/user/post-deploy.log 2>&1
+# Проверка dist/app.js
+/bin/echo "Checking dist/app.js..." >> /home/user/post-deploy.log 2>&1
+/bin/ls -la dist/app.js >> /home/user/post-deploy.log 2>&1
 if [ $? -ne 0 ]; then
-  echo "dist/app.js not found" >> /home/user/post-deploy.log
+  /bin/echo "dist/app.js not found" >> /home/user/post-deploy.log 2>&1
   exit 1
 fi
 
-echo "Starting PM2..." >> /home/user/post-deploy.log
+# Запуск PM2
+/bin/echo "Starting PM2..." >> /home/user/post-deploy.log 2>&1
 /home/user/.nvm/versions/node/v18.20.8/bin/pm2 startOrReload /home/user/current/backend/ecosystem-backend.config.js --env production >> /home/user/post-deploy.log 2>&1
 if [ $? -ne 0 ]; then
-  echo "Failed to start PM2" >> /home/user/post-deploy.log
+  /bin/echo "Failed to start PM2" >> /home/user/post-deploy.log 2>&1
   exit 1
 fi
 
-echo "=== Post-deploy completed successfully ===" >> /home/user/post-deploy.log
+/bin/echo "=== Post-deploy completed successfully ===" >> /home/user/post-deploy.log 2>&1
