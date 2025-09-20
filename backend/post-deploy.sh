@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "=== Post-deploy started ==="
 echo "Current directory: $(pwd)"
 
@@ -30,7 +31,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Starting PM2..."
-pm2 startOrReload ecosystem-backend.config.js --env production
+pm2 startOrReload /home/user/current/backend/ecosystem-backend.config.js --env production
 if [ $? -ne 0 ]; then
   echo "Failed to start PM2"
   exit 1

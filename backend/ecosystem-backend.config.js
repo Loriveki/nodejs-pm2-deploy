@@ -38,6 +38,7 @@ module.exports = {
       key: DEPLOY_SSH_KEY,
       'pre-deploy-local': `bash ${path.resolve(__dirname, 'pre-deploy.sh')}`,
       'post-deploy': `
+        echo "Starting post-deploy..." &&
         cd ${DEPLOY_PATH}/current/backend &&
         bash post-deploy.sh
       `,
