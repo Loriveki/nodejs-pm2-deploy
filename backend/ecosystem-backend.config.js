@@ -4,8 +4,8 @@ module.exports = {
   apps: [
     {
       name: 'mesto-backend',
-      script: '/home/user/current/dist/app.js',
-      cwd: '/home/user/current',
+      script: '/home/user/current/backend/dist/app.js',
+      cwd: '/home/user/current/backend',
       watch: false,
       autorestart: true,
       max_restarts: 10,
@@ -25,7 +25,7 @@ module.exports = {
       path: process.env.DEPLOY_PATH,
       key: process.env.DEPLOY_SSH_KEY,
       'pre-deploy-local': 'bash backend/pre-deploy.sh',
-      'post-deploy': 'bash /home/user/current/post-deploy.sh',
+      'post-deploy': 'bash /home/user/current/backend/post-deploy.sh',
     },
   },
 };
