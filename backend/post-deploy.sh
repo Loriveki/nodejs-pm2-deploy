@@ -7,17 +7,14 @@ export LC_ALL=en_US.UTF-8
 
 # Логирование
 /bin/echo "Starting post-deploy at $(/bin/date)..." > /home/user/post-deploy.log 2>&1
-/bin/echo "DEPLOY_PATH is $DEPLOY_PATH" >> /home/user/post-deploy.log 2>&1
-/bin/echo "Checking /home/user permissions..." >> /home/user/post-deploy.log 2>&1
-/bin/ls -ld /home/user >> /home/user/post-deploy.log 2>&1 || { /bin/echo "Failed to list /home/user" >> /home/user/post-deploy-error.log; exit 1; }
-/bin/echo "Checking /home/user/current/backend..." >> /home/user/post-deploy.log 2>&1
-/bin/ls -ld /home/user/current/backend >> /home/user/post-deploy.log 2>&1 || { /bin/echo "Directory /home/user/current/backend not found" >> /home/user/post-deploy-error.log; exit 1; }
-cd /home/user/current/backend || { /bin/echo "Failed to cd to /home/user/current/backend" >> /home/user/post-deploy-error.log; exit 1; }
 
 # Инициализация NVM
 /bin/echo "Initializing NVM..." >> /home/user/post-deploy.log 2>&1
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || { /bin/echo "Failed to initialize NVM" >> /home/user/post-deploy-error.log; exit 1; }
+
+# Переход в директорию
+cd /home/user/current || { /bin/echo "Failed to cd to /home/user/current" >> /home/user/post-deploy-error.log; exit 1; }
 
 # Установка typescript
 /bin/echo "Installing typescript..." >> /home/user/post-deploy.log 2>&1
@@ -53,7 +50,7 @@ fi
 
 # Запуск PM2
 /bin/echo "Starting PM2..." >> /home/user/post-deploy.log 2>&1
-/home/user/.nvm/versions/node/v18.20.8/bin/pm2 startOrReload /home/user/current/backend/ecosystem-backend.config.js --env production >> /home/user/post-deploy.log 2>&1
+/home/user/.nvm/versions/node/v18.20.8/bin/pm2 startOrReload /home/user/current/ecosystem-backend.config.js --env production >> /home/user/post-deploy.log 2>&1
 if [ $? -ne 0 ]; then
   /bin/echo "Failed to start PM2" >> /home/user/post-deploy.log 2>&1
   exit 1
