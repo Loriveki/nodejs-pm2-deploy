@@ -14,7 +14,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || { /bin/echo "Failed to initialize NVM" >> /home/user/post-deploy-error.log; exit 1; }
 
 # Переход в директорию
-cd /home/user/current || { /bin/echo "Failed to cd to /home/user/current" >> /home/user/post-deploy-error.log; exit 1; }
+cd /home/user/current/backend || { /bin/echo "Failed to cd to /home/user/current/backend" >> /home/user/post-deploy-error.log; exit 1; }
 
 # Установка typescript
 /bin/echo "Installing typescript..." >> /home/user/post-deploy.log 2>&1
@@ -50,7 +50,7 @@ fi
 
 # Запуск PM2
 /bin/echo "Starting PM2..." >> /home/user/post-deploy.log 2>&1
-/home/user/.nvm/versions/node/v18.20.8/bin/pm2 startOrReload /home/user/current/ecosystem-backend.config.js --env production >> /home/user/post-deploy.log 2>&1
+/home/user/.nvm/versions/node/v18.20.8/bin/pm2 startOrReload /home/user/current/backend/ecosystem-backend.config.js --env production >> /home/user/post-deploy.log 2>&1
 if [ $? -ne 0 ]; then
   /bin/echo "Failed to start PM2" >> /home/user/post-deploy.log 2>&1
   exit 1
