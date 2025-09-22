@@ -15,8 +15,9 @@ DEPLOY_SSH_KEY=${DEPLOY_SSH_KEY:-/home/loriveki/.ssh/mesto_server}
 
 # Проверка .env файла
 if [ -f "$ENV_FILE" ]; then
-  echo "File $ENV_FILE exists, proceeding with scp..." >> /home/loriveki/pre-deploy-error.log
+  echo "Copying $ENV_FILE to $DEPLOY_USER@$DEPLOY_HOST:/home/user/shared/.env..." >&2
   scp -i "$DEPLOY_SSH_KEY" "$ENV_FILE" "$DEPLOY_USER@$DEPLOY_HOST:/home/user/shared/.env" >> /home/loriveki/pre-deploy-error.log 2>&1 || { echo "Failed to copy .env file" >> /home/loriveki/pre-deploy-error.log; exit 1; }
+  echo "Successfully copied .env file" >&2
 else
   echo "File $ENV_FILE does not exist!" >> /home/loriveki/pre-deploy-error.log
   exit 1
