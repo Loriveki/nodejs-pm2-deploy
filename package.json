@@ -1,10 +1,6 @@
 {
   "dependencies": {
-    "@sideway/address": "^5.0.0",
-    "@sideway/formula": "^3.0.1",
-    "@sideway/pinpoint": "^2.0.0",
     "dotenv": "^17.2.2",
-    "joi": "^17.13.3",
     "pm2": "^6.0.11"
   }
 }
