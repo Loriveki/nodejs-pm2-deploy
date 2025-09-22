@@ -11,6 +11,7 @@ import routes from './routes';
 
 const { PORT = 3000 } = process.env;
 const app = express();
+mongoose.set('strictQuery', true);
 mongoose.connect(DB_ADDRESS);
 
 // Только для локальных тестов. Не используйте это в продакшене
