@@ -10,6 +10,7 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "serve": "^14.2.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -17,7 +18,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && scp -r ./build/* user@158.160.185.102:/home/user/mesto-frontend && ssh user@158.160.185.102 'chmod -R 755 /home/user/mesto-frontend'"
+    "deploy": "pm2 deploy ecosystem-frontend.config.js production"
   },
   "eslintConfig": {
     "extends": [

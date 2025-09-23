@@ -7,7 +7,7 @@ module.exports = {
       script: '/home/user/current/backend/dist/app.js',
       cwd: '/home/user/current/backend',
       watch: false,
-      autorestart: true,
+      autorestart: false,
       max_restarts: 10,
       env_production: {
         NODE_ENV: 'production',
