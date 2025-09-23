@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '../.env.deploy' });
+require('dotenv').config({ path: '.env.deploy' });
 
 module.exports = {
   apps: [
@@ -22,7 +22,7 @@ module.exports = {
       host: process.env.DEPLOY_HOST,
       ref: process.env.DEPLOY_REF,
       repo: process.env.DEPLOY_REPO,
-      path: process.env.DEPLOY_PATH + '/frontend',
+      path: process.env.DEPLOY_PATH,
       key: process.env.DEPLOY_SSH_KEY,
       'post-deploy': 'bash /home/user/current/frontend/post-deploy.sh',
     },
