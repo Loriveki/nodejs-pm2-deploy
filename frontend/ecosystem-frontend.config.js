@@ -1,22 +1,16 @@
-require('dotenv').config({ path: './.env.deploy' });
-
-const {
-  DEPLOY_USER,
-  DEPLOY_HOST,
-  DEPLOY_REPO,
-  DEPLOY_PATH,
-  DEPLOY_REF,
-  DEPLOY_SSH_KEY,
-} = process.env;
+require('dotenv').config({ path: '.env.deploy' });
 
 module.exports = {
   apps: [
     {
       name: 'mesto-frontend',
-      script: 'dist/index.js',
+      script: 'npx',
+      args: 'serve -s build -p 3001',
+      cwd: '/home/user/current/frontend',
       watch: false,
       autorestart: true,
-      env: {
+      max_restarts: 10,
+      env_production: {
         NODE_ENV: 'production',
       },
     },
@@ -24,17 +18,13 @@ module.exports = {
 
   deploy: {
     production: {
-      user: DEPLOY_USER,
-      host: DEPLOY_HOST,
-      ref: DEPLOY_REF,
-      repo: DEPLOY_REPO,
-      path: DEPLOY_PATH,
-      key: DEPLOY_SSH_KEY,
-      'post-deploy': `
-        cd ${DEPLOY_PATH}/current &&
-        npm install &&
-        npm run build
-      `,
+      user: process.env.DEPLOY_USER,
+      host: process.env.DEPLOY_HOST,
+      ref: process.env.DEPLOY_REF,
+      repo: process.env.DEPLOY_REPO,
+      path: process.env.DEPLOY_PATH,
+      key: process.env.DEPLOY_SSH_KEY,
+      'post-deploy': 'cd /home/user/current/frontend && npm install && npm run build',
     },
   },
 };
