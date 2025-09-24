@@ -12,6 +12,11 @@ cd /home/user/current/frontend || { echo "Failed to cd to /home/user/current/fro
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || { echo "Failed to initialize NVM" > /home/user/post-deploy-frontend-error.log; exit 1; }
 
+# Копирование .env
+if [ -f "/home/user/shared/frontend.env" ]; then
+  cp /home/user/shared/frontend.env .env || { echo "Failed to copy frontend.env" > /home/user/post-deploy-frontend-error.log; exit 1; }
+fi
+
 # Установка зависимостей и сборка
 /home/user/.nvm/versions/node/v18.20.8/bin/npm install && /home/user/.nvm/versions/node/v18.20.8/bin/npm run build >> /home/user/post-deploy-frontend-error.log 2>&1 || { echo "Failed to install dependencies or build" > /home/user/post-deploy-frontend-error.log; exit 1; }
 
