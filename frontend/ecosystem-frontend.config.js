@@ -8,7 +8,7 @@ module.exports = {
       args: 'serve -s build -l 3001',
       cwd: '/home/user/current/frontend',
       watch: false,
-     autorestart: false,
+      autorestart: true,
       max_restarts: 10,
       env_production: {
         NODE_ENV: 'production',
