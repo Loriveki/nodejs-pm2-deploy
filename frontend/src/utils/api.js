@@ -4,7 +4,7 @@ const getResponse = (res) => {
 
 class Api {
   constructor() {
-    this._address = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+    this._address = process.env.REACT_APP_API_URL || 'http://158.160.185.102:3000';
   }
 
   setToken(token) {
