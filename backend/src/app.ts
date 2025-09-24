@@ -14,7 +14,7 @@ const app = express();
 mongoose.set('strictQuery', true);
 mongoose.connect(DB_ADDRESS);
 
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:3001', 'http://158.160.185.102:3001'], credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
