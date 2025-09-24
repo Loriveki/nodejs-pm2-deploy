@@ -24,6 +24,7 @@ module.exports = {
       repo: process.env.DEPLOY_REPO,
       path: process.env.DEPLOY_PATH,
       key: process.env.DEPLOY_SSH_KEY,
+      'pre-deploy-local': 'bash frontend/pre-deploy.sh',
       'post-deploy': 'bash /home/user/current/frontend/post-deploy.sh',
     },
   },
